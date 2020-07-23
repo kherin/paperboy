@@ -1,2 +1,2 @@
-# server-app
-An experimental server application.
+# Paperboy
+An experimental PWA using websockets.
