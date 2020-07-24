@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Publisher</title>
+      <link rel="stylesheet" href="./css/bulma.min.css" />
+    </head>
+    <script>
+      let messages = [];
+      window.addEventListener("DOMContentLoaded", (event) => {
+        let socket = new WebSocket("ws://localhost:8080");
+
+        socket.onopen = function (e) {
+          console.log("onopen: ", e);
+        };
+
+        socket.onmessage = function (event) {
+          const value = event.data;
+          messages = [...JSON.parse(value)];
+        };
+
+        socket.onclose = function (event) {
+          console.log("onclose: ", event);
+        };
+
+        socket.onerror = function (error) {
+          console.log("onerror: ", error);
+        };
+      });
+      setInterval(function () {
+        document.querySelector("#board").innerHTML = `<p>${JSON.stringify(
+          messages
+        )}</p>`;
+      }, 6000);
+    </script>
+  </head>
+  <body>
+    <section class="hero is-success is-fullheight is-warning is-bold">
+      <div class="herok-body">
+        <div class="container is-fluid">
+          <div class="tile">
+            <div class="tile is-parent is-vertical">
+              <article class="tile is-child notification">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="media pb-4">
+                      <div class="media-left">
+                        <figure class="image is-48x48">
+                          <img src="https://cdn.shopify.com/s/files/1/1061/1924/files/Thumbs_Up_Sign_Emoji_Icon_ios10.png?13752525173949329807">
+                        </figure>
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-3">Kudos</p>
+                      </div>
+                    </div>
+                
+                    <p class="title pb-6">
+                      “There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.”
+                    </p>
+                    <p class="subtitle">
+                      Jeff Atwood
+                    </p>
+                  </div>
+                  <footer class="card-footer">
+                    <p class="card-footer-item">
+                      <span>
+                        <a href="https://xyz.test">https://xyz.test</a>
+                      </span>
+                    </p>
+                  </footer>
+                  </div>
+                </div>
+              </article>  
+            </div>
+        </div>
+      </div>
+    </section>
+      </div>
+    </div>
+  </body>
+</html>
