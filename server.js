@@ -10,28 +10,30 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const messages = [];
+const messages = ['initial'];
 
 const wsServer = new ws.Server({ noServer: true });
-wsServer.on('connection', socket => {
-    socket.on('message', message => {
-        socket.send(JSON.stringify(messages));
-    });
+
+wsServer.on('connection', function connection(ws) {
+    setInterval(function () {
+        broadcast(wsServer);
+    }, 3000);
 });
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/reader', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/reader.html'));
+app.get('/editor', (_, res) => {
+    res.sendFile(path.join(__dirname, 'public/editor.html'));
 });
 
-app.post('/reader', (req, res) => {
+app.post('/editor', (req, res) => {
     const { message } = req.body;
     messages.push(message);
     res.sendStatus(200);
 });
 
-app.get('/publisher', (req, res) => {
+app.get('/publisher', (_, res) => {
     res.sendFile(path.join(__dirname, 'public/publisher.html'));
 });
 
@@ -45,3 +47,11 @@ server.on('upgrade', (request, socket, head) => {
         wsServer.emit('connection', socket, request);
     });
 });
+
+function broadcast(websocket) {
+    websocket.clients.forEach(function each(client) {
+        if (client.readyState === ws.OPEN) {
+            client.send(JSON.stringify(messages));
+        }
+    });
+}
