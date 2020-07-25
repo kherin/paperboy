@@ -20,7 +20,6 @@ wsServer.on('connection', function connection(ws) {
     }, process.env.POLLING_INTERVAL);
 });
 
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/editor', (_, res) => {
@@ -29,17 +28,16 @@ app.get('/editor', (_, res) => {
 
 app.post('/editor', (req, res) => {
     const { message } = req.body;
-    if (messages == 100) {
+    if (messages.length == 100) {
         messages.shift();
-        messages.unshift(message);
     }
+    messages.push(message);
     res.sendStatus(200);
 });
 
 app.get('/publisher', (_, res) => {
     res.sendFile(path.join(__dirname, 'public/publisher/publisher.html'));
 });
-
 
 const server = app.listen(PORT, () => {
     console.log(`Listening on Port: ${PORT}`);

@@ -1,17 +1,134 @@
 <!DOCTYPE html>
 <html>
-  <head> </head>
+  <head>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Editor</title>
+      <link rel="stylesheet" href="./css/bulma.min.css" />
+    </head>
+  </head>
   <body>
-    <span>
-      <input id="inputText" type="text" />
-    </span>
-    <span>
-      <button onClick="onClickHandler()">Send</button>
-    </span>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="javascript:void(0);">
+          <img src="./img/paperboy.png" />
+        </a>
+        <div class="navbar-item is-size-5">
+          Paperboy
+        </div>
+      </div>
+    </nav>
+    <section class="hero is-fullheight is-info is-bold">
+      <div class="hero-body">
+        <div class="container is-fluid">
+          <div class="columns">
+            <div class="column is-one-fifth"></div>
+            <div class="column">
+              <div class="card">
+                <div class="card-content">
+                  <div class="field pb-4">
+                    <label class="label">Author</label>
+                    <div class="control">
+                      <input
+                        id="authorTextInput"
+                        class="input"
+                        type="text"
+                        placeholder="anonymous"
+                      />
+                    </div>
+                  </div>
+                  <div class="field pb-4">
+                    <label class="label">Category</label>
+                    <div class="control">
+                      <div class="select">
+                        <select id="categorySelect">
+                          <option>Kudos</option>
+                          <option>Information</option>
+                          <option>Joke</option>
+                          <option>Question</option>
+                          <option>Quote</option>
+                          <option>Tip</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field pb-4">
+                    <label class="label">Message</label>
+                    <div class="control">
+                      <textarea
+                        id="messageTextArea"
+                        class="textarea"
+                        oninput="onMessageChangeHandler()"
+                      ></textarea>
+                    </div>
+                    <span id="wordCounter" class="is-size-7 has-text-right"
+                      >0/150</span
+                    >
+                  </div>
+                  <button
+                    id="sendBtn"
+                    class="button is-success"
+                    onclick="onClickHandler()"
+                  >
+                    Send
+                  </button>
+                  <span
+                    id="sentMessage"
+                    class="has-text-default pl-3 is-hidden"
+                  >
+                    Sent
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="column is-one-fifth"></div>
+          </div>
+        </div>
+      </div>
+    </section>
     <script>
+      function onMessageChangeHandler() {
+        const words = document.querySelector("#messageTextArea").value;
+        const wordCount = words.length;
+        document.querySelector("#wordCounter").textContent = `${wordCount}/150`;
+        if (wordCount > 150) {
+          document.querySelector("#messageTextArea").classList.add("is-danger");
+          document.querySelector("#sendBtn").disabled = true;
+        } else {
+          document
+            .querySelector("#messageTextArea")
+            .classList.remove("is-danger");
+          document.querySelector("#sendBtn").disabled = false;
+        }
+      }
+
       function onClickHandler() {
-        const message = document.querySelector("#inputText").value;
-        send(message);
+        const author =
+          document.querySelector("#authorTextInput").value || "anonymous";
+        const type = document.querySelector("#categorySelect").value;
+        const message = document.querySelector("#messageTextArea").value;
+
+        const data = {
+          type: type,
+          mediaType: "text",
+          message: message,
+          author: author,
+          image_url: "",
+          exp: "",
+        };
+
+        send(data);
+
+        // clear fields
+        document.querySelector("#authorTextInput").value = "";
+        document.querySelector("#categorySelect").value = "";
+        document.querySelector("#messageTextArea").value = "";
+        document.querySelector("#sentMessage").classList.remove("is-hidden");
+
+        setTimeout(() => {
+          document.querySelector("#sentMessage").classList.add("is-hidden");
+        }, 3000);
       }
 
       function send(message) {

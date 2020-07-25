@@ -10,6 +10,8 @@
     <script>
       let messages = [];
       let currentIndex = 0;
+      let backgroundColor = 'is-warning';
+
       window.addEventListener("DOMContentLoaded", (event) => {
         let socket = new WebSocket("ws://localhost:8080");
 
@@ -37,9 +39,9 @@
         document.querySelector('#typeContent').textContent = type;
         document.querySelector('#messageContent').textContent = message;
         document.querySelector('#authorContent').textContent = author || 'anonymous';
-
+        
         let imageURL = 'thumbs_up.png';
-
+        
         if ( type == 'kudos' ) {
           imageURL = 'thumbs_up.png';
         } else if ( type == 'info' ) {
@@ -53,7 +55,7 @@
         } else if ( type == 'quote' ) {
           imageURL = 'quote.png';
         }
-
+        
         document.querySelector('#cardIcon').setAttribute('src', `./img/${imageURL}`);
       }
 
@@ -69,7 +71,7 @@
     </script>
   </head>
   <body>
-    <section class="hero is-success is-fullheight is-warning is-bold">
+    <section id="heroColor" class="hero is-fullheight is-warning is-bold">
       <div class="hero-body">
         <div class="container is-fluid">
           <div class="tile">
@@ -84,7 +86,7 @@
                         </figure>
                       </div>
                       <div class="media-content">
-                        <p id="typeContent" class="title is-3">Start</p>
+                        <p id="typeContent" class="title is-3" style='display: none;'>Start</p>
                       </div>
                     </div>
                     <p id="messageContent" class="title pb-6">
