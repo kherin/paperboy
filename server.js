@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const messages = [...test_data];
-
 const wsServer = new ws.Server({ noServer: true });
 
 wsServer.on('connection', function connection(ws) {

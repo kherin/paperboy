@@ -9,6 +9,7 @@
     </head>
     <script>
       let messages = [];
+      let currentIndex = 0;
       window.addEventListener("DOMContentLoaded", (event) => {
         let socket = new WebSocket("ws://localhost:8080");
 
@@ -29,16 +30,29 @@
           console.log("onerror: ", error);
         };
       });
+
+      function rotateCard(messageData) {
+        const { type, mediaType, message, author, image_url, exp} = messageData;
+        
+        document.querySelector('#typeContent').textContent = type;
+        document.querySelector('#messageContent').textContent = message;
+        document.querySelector('#authorContent').textContent = author || 'anonymous';
+      }
+
       setInterval(function () {
-        document.querySelector("#board").innerHTML = `<p>${JSON.stringify(
-          messages
-        )}</p>`;
+        if ( messages.length ) {
+          rotateCard(messages[currentIndex]);
+          currentIndex = currentIndex + 1;
+          if ( currentIndex == messages.length ) {
+            currentIndex = 0;
+          }
+        }
       }, 6000);
     </script>
   </head>
   <body>
     <section class="hero is-success is-fullheight is-warning is-bold">
-      <div class="herok-body">
+      <div class="hero-body">
         <div class="container is-fluid">
           <div class="tile">
             <div class="tile is-parent is-vertical">
@@ -48,18 +62,17 @@
                     <div class="media pb-4">
                       <div class="media-left">
                         <figure class="image is-48x48">
-                          <img src="https://cdn.shopify.com/s/files/1/1061/1924/files/Thumbs_Up_Sign_Emoji_Icon_ios10.png?13752525173949329807">
+                          <img src="./img/thumbs_up.png">
                         </figure>
                       </div>
                       <div class="media-content">
-                        <p class="title is-3">Kudos</p>
+                        <p id="typeContent" class="title is-3">Kudos</p>
                       </div>
                     </div>
-                
-                    <p class="title pb-6">
+                    <p id="messageContent" class="title pb-6">
                       “There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.”
                     </p>
-                    <p class="subtitle">
+                    <p id="authorContent" class="subtitle">
                       Jeff Atwood
                     </p>
                   </div>
@@ -77,7 +90,5 @@
         </div>
       </div>
     </section>
-      </div>
-    </div>
   </body>
 </html>

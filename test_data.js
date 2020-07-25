@@ -2,7 +2,7 @@ module.exports = [
     {
         type: 'kudos',
         mediaType: 'text',
-        message: 'Kudos to Kherin for being Kherin',
+        message: 'Kudos to Kherin for being Kherin. You are special type of Kherin. Kherin. Kherin. Kherin Kherin. Khe',
         author: 'anonymous',
         image_url: '',
         exp: ''
