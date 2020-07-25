@@ -30,8 +30,8 @@ app.get('/editor', (_, res) => {
 app.post('/editor', (req, res) => {
     const { message } = req.body;
     if (messages == 100) {
-        messages.pop();
-        messages.push(message);
+        messages.shift();
+        messages.unshift(message);
     }
     res.sendStatus(200);
 });

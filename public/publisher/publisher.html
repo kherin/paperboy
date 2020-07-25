@@ -32,11 +32,29 @@
       });
 
       function rotateCard(messageData) {
-        const { type, mediaType, message, author, image_url, exp} = messageData;
+        const { type, mediaType, message, author, image_url, exp } = messageData;
         
         document.querySelector('#typeContent').textContent = type;
         document.querySelector('#messageContent').textContent = message;
         document.querySelector('#authorContent').textContent = author || 'anonymous';
+
+        let imageURL = 'thumbs_up.png';
+
+        if ( type == 'kudos' ) {
+          imageURL = 'thumbs_up.png';
+        } else if ( type == 'info' ) {
+          imageURL = 'info.png';
+        } else if ( type == 'tip' ) {
+          imageURL = 'tip.png';
+        } else if ( type == 'question' ) {
+          imageURL = 'question.png';
+        } else if ( type == 'joke' ) {
+          imageURL = 'joke.png';
+        } else if ( type == 'quote' ) {
+          imageURL = 'quote.png';
+        }
+
+        document.querySelector('#cardIcon').setAttribute('src', `./img/${imageURL}`);
       }
 
       setInterval(function () {
@@ -62,11 +80,11 @@
                     <div class="media pb-4">
                       <div class="media-left">
                         <figure class="image is-48x48">
-                          <img src="./img/thumbs_up.png">
+                          <img id="cardIcon" src="./img/thumbs_up.png">
                         </figure>
                       </div>
                       <div class="media-content">
-                        <p id="typeContent" class="title is-3">Kudos</p>
+                        <p id="typeContent" class="title is-3">Start</p>
                       </div>
                     </div>
                     <p id="messageContent" class="title pb-6">
