@@ -5,114 +5,111 @@
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Publisher</title>
-      <link rel="manifest" href="manifest.json">
+      <link rel="manifest" href="manifest.json" />
       <link rel="stylesheet" href="./css/bulma.min.css" />
     </head>
     <script>
-      let messages = [];
-      let currentIndex = 0;
-      let backgroundColor = 'is-warning';
+      var messages = [];
+      var currentIndex = 0;
+      var backgroundColor = "is-warning";
 
-      window.addEventListener("DOMContentLoaded", (event) => {
-        if ("serviceWorker" in navigator) {
-          // register service worker
-          navigator.serviceWorker.register("service-worker.js");
-        }
+      function updateMessages() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://paperboy.glitch.me/messages");
+        xhr.send();
 
-        let socket = new WebSocket("ws://localhost:8080");
-
-        socket.onopen = function (e) {
-          console.log("onopen: ", e);
+        xhr.onload = function() {
+          if (xhr.status != 200) {
+            console.log("Error!");
+          }
+          messages = JSON.parse(xhr.response);
         };
-
-        socket.onmessage = function (event) {
-          const value = event.data;
-          messages = [...JSON.parse(value)];
-        };
-
-        socket.onclose = function (event) {
-          console.log("onclose: ", event);
-        };
-
-        socket.onerror = function (error) {
-          console.log("onerror: ", error);
-        };
-      });
+      }
+      setInterval(() => {
+        updateMessages();
+      }, 6000);
 
       function rotateCard(messageData) {
-        const { type, mediaType, message, author, image_url, exp } = messageData;
-        
-        document.querySelector('#typeContent').textContent = type;
-        document.querySelector('#messageContent').textContent = message;
-        document.querySelector('#authorContent').textContent = author || 'anonymous';
-        
-        let imageURL = 'thumbs_up.png';
-        
-        if ( type == 'kudos' ) {
-          imageURL = 'thumbs_up.png';
-        } else if ( type == 'info' ) {
-          imageURL = 'info.png';
-        } else if ( type == 'tip' ) {
-          imageURL = 'tip.png';
-        } else if ( type == 'question' ) {
-          imageURL = 'question.png';
-        } else if ( type == 'joke' ) {
-          imageURL = 'joke.png';
-        } else if ( type == 'quote' ) {
-          imageURL = 'quote.png';
+        var type = messageData["type"];
+        var mediaType = messageData["mediaType"];
+        var message = messageData["message"];
+        var author = messageData["author"];
+        var image_url = messageData["image_url"];
+        var exp = messageData["exp"];
+
+        document.querySelector("#typeContent").textContent = type;
+        document.querySelector("#messageContent").textContent = message;
+        document.querySelector("#authorContent").textContent =
+          author || "anonymous";
+
+        var imageURL = "thumbs_up.png";
+
+        if (type == "kudos") {
+          imageURL = "thumbs_up.png";
+        } else if (type == "info") {
+          imageURL = "info.png";
+        } else if (type == "tip") {
+          imageURL = "tip.png";
+        } else if (type == "question") {
+          imageURL = "question.png";
+        } else if (type == "joke") {
+          imageURL = "joke.png";
+        } else if (type == "quote") {
+          imageURL = "quote.png";
         }
-        
-        document.querySelector('#cardIcon').setAttribute('src', `./img/${imageURL}`);
+
+        document
+          .querySelector("#cardIcon")
+          .setAttribute("src", "./img/" + imageURL);
       }
 
-      setInterval(function () {
-        if ( messages.length ) {
+      setInterval(function() {
+        if (messages.length) {
           rotateCard(messages[currentIndex]);
           currentIndex = currentIndex + 1;
-          if ( currentIndex == messages.length ) {
+          if (currentIndex == messages.length) {
             currentIndex = 0;
           }
         }
-      }, 6000);
+      }, 10000);
     </script>
   </head>
   <body>
     <section id="heroColor" class="hero is-fullheight is-warning is-bold">
       <div class="hero-body">
         <div class="container is-fluid">
-          <div class="tile">
-            <div class="tile is-parent is-vertical">
-              <article class="tile is-child notification">
-                <div class="card">
-                  <div class="card-content">
-                    <div class="media pb-4">
-                      <div class="media-left">
-                        <figure class="image is-48x48">
-                          <img id="cardIcon" src="./img/thumbs_up.png">
-                        </figure>
-                      </div>
-                      <div class="media-content">
-                        <p id="typeContent" class="title is-3" style='display: none;'>Start</p>
-                      </div>
-                    </div>
-                    <p id="messageContent" class="title pb-6">
-                      “There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.”
-                    </p>
-                    <p id="authorContent" class="subtitle">
-                      Jeff Atwood
-                    </p>
-                  </div>
-                  <footer class="card-footer">
-                    <p class="card-footer-item">
-                      <span>
-                        <a href="https://xyz.test">https://xyz.test</a>
-                      </span>
-                    </p>
-                  </footer>
-                  </div>
+          <div class="card">
+            <div class="card-content">
+              <div class="media pb-4">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <img id="cardIcon" src="./img/thumbs_up.png" />
+                  </figure>
                 </div>
-              </article>  
+                <div class="media-content">
+                  <p id="typeContent" class="title is-3" style="display: none;">
+                    Start
+                  </p>
+                </div>
+              </div>
+              <p id="messageContent" class="title pb-6">
+                “There are two hard things in computer science: cache
+                invalidation, naming things, and off-by-one errors.”
+              </p>
+              <p id="authorContent" class="subtitle">
+                Jeff Atwood
+              </p>
             </div>
+            <footer class="card-footer">
+              <p class="card-footer-item">
+                <span>
+                  <a href="https://paperboy.glitch.me/"
+                    >https://paperboy.glitch.me/</a
+                  >
+                </span>
+              </p>
+            </footer>
+          </div>
         </div>
       </div>
     </section>

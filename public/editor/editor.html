@@ -5,7 +5,7 @@
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>Editor</title>
-      <link rel="stylesheet" href="./css/bulma.min.css" />
+      <link rel="stylesheet" type="text/css" href="./css/bulma.min.css" />
     </head>
   </head>
   <body>
@@ -115,7 +115,7 @@
           message: message,
           author: author,
           image_url: "",
-          exp: "",
+          exp: ""
         };
 
         send(data);
@@ -133,12 +133,12 @@
 
       function send(message) {
         const payload = { message: message };
-        fetch("http://localhost:8080/editor", {
+        fetch("https://paperboy.glitch.me/editor/", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(payload)
         });
       }
     </script>
